@@ -16,10 +16,11 @@ def notify(count):
     return
 
 
-rising_retrieve_limit=10
+rising_retrieve_limit = 10
+
 
 try:
-    user_agent="linux:Rising Watch:v0.0.1 (by /u/not_da_bot)"
+    user_agent = "linux:Rising Watch:v0.0.1 (by /u/not_da_bot)"
     r = praw.Reddit(user_agent=user_agent)
     last_ids = []
     r.login()
