@@ -52,7 +52,7 @@ def notify(pin, count):
 try:
     init_gpio()
     user_agent = "linux:Rising Watch:v0.0.1 (by /u/not_da_bot)"
-    r = praw.Reddit(user_agent=user_agent)
+    r = praw.Reddit(user_agent=user_agent, cache_timeout=1)
     last_ids = []
     r.login()
     while 1:
