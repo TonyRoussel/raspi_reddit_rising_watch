@@ -44,7 +44,7 @@ def cooldown(pin):
 
 def notify(pin, titles):
     for title in titles:
-        print title
+        print "-", title.encode('utf-8')
         gpio_blink(pin, bton=1/4.)
         time.sleep(1/4.)
     print ""
@@ -67,13 +67,15 @@ try:
                 new_titles.append(submission.title)
             ids_list.append(submission.id)
         last_ids = list(ids_list)
-        if new_count != 0:
+        if len(new_titles) != 0:
             notify(gpio_new_rise, new_titles)
         cooldown(gpio_retrieve)
 except KeyboardInterrupt:
     print >> sys.stderr, "\nKeyboard Interruption\n"
 except praw.errors.InvalidUserPass:
     print >> sys.stderr, "\nInvalid credentials\n"
+except Exception,e:
+    print str(e)
 except:
     print >> sys.stderr, "\nUnexpected Exception\n"
 finally:
