@@ -42,10 +42,12 @@ def cooldown(pin):
     return
 
 
-def notify(pin, count):
-    for i in xrange(count):
+def notify(pin, titles):
+    for title in titles:
+        print title
         gpio_blink(pin, bton=1/4.)
-        time.sleep(1/3.)
+        time.sleep(1/4.)
+    print ""
     return
 
 
@@ -57,16 +59,16 @@ try:
     r.login()
     while 1:
         GPIO.output(gpio_retrieve, GPIO.HIGH)
-        new_count = 0
         ids_list = []
+        new_titles = []
         rising = r.get_rising(limit=rising_retrieve_limit)
         for submission in rising:
             if submission.id not in last_ids:
-                new_count = new_count + 1
+                new_titles.append(submission.title)
             ids_list.append(submission.id)
         last_ids = list(ids_list)
         if new_count != 0:
-            notify(gpio_new_rise, new_count)
+            notify(gpio_new_rise, new_titles)
         cooldown(gpio_retrieve)
 except KeyboardInterrupt:
     print >> sys.stderr, "\nKeyboard Interruption\n"
