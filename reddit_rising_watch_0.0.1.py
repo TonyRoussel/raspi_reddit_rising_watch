@@ -6,7 +6,7 @@ import RPi.GPIO as GPIO
 
 
 gpio_new_rise = 7
-gpio_retrive = 11
+gpio_retrieve = 11
 
 gpio_list = [gpio_new_rise, gpio_retrieve]
 
