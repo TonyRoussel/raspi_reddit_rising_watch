@@ -42,9 +42,16 @@ def cooldown(pin):
     return
 
 
-def notify(pin, titles):
-    for title in titles:
-        print "-", title.encode('utf-8')
+def notify(pin, submissions):
+    for submission in submissions:
+        title = submission.title.encode('utf-8')
+        subreddit_name = submission.subreddit.display_name.encode('utf-8')
+        comments_count = submission.num_comments
+        nsfw = submission.over_18
+        if not nsfw:
+            print "- %s [/r/%s] (%d comments)" % (title, subreddit_name, comments_count)
+        else:
+            print "- %s [/r/%s] (%d comments) {NSFW}" % (title, subreddit_name, comments_count)
         gpio_blink(pin, bton=1/4.)
         time.sleep(1/4.)
     print ""
@@ -60,15 +67,15 @@ try:
     while 1:
         GPIO.output(gpio_retrieve, GPIO.HIGH)
         ids_list = []
-        new_titles = []
+        new_submissions = []
         rising = r.get_rising(limit=rising_retrieve_limit)
         for submission in rising:
             if submission.id not in last_ids:
-                new_titles.append(submission.title)
+                new_submissions.append(submission)
             ids_list.append(submission.id)
         last_ids = list(ids_list)
-        if len(new_titles) != 0:
-            notify(gpio_new_rise, new_titles)
+        if len(new_submissions) != 0:
+            notify(gpio_new_rise, new_submissions)
         cooldown(gpio_retrieve)
 except KeyboardInterrupt:
     print >> sys.stderr, "\nKeyboard Interruption\n"
