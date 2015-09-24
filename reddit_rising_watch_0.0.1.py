@@ -12,7 +12,7 @@ gpio_nsfw = 15
 
 gpio_list = [gpio_new_rise, gpio_retrieve, gpio_comm_num, gpio_nsfw]
 
-time_new_rise = 1/4.
+time_new_rise = 1.
 
 
 rising_retrieve_limit = 10
