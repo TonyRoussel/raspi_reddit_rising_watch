@@ -82,7 +82,7 @@ except KeyboardInterrupt:
 except praw.errors.InvalidUserPass:
     print >> sys.stderr, "\nInvalid credentials\n"
 except Exception,e:
-    print str(e)
+    print >> sys.stderr, str(e)
 except:
     print >> sys.stderr, "\nUnexpected Exception\n"
 finally:
