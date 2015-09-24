@@ -13,6 +13,7 @@ gpio_nsfw = 15
 gpio_list = [gpio_new_rise, gpio_retrieve, gpio_comm_num, gpio_nsfw]
 
 time_new_rise = 1.
+time_between_notif = 1/4.
 
 
 rising_retrieve_limit = 10
@@ -50,6 +51,7 @@ def cooldown(pin):
 
 def notify(submissions):
     for submission in submissions:
+        time.sleep(time_between_notif)
         title = submission.title.encode('utf-8')
         subreddit_name = submission.subreddit.display_name.encode('utf-8')
         comments_count = submission.num_comments
