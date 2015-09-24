@@ -59,7 +59,7 @@ def notify(submissions):
         else:
             print "- %s [/r/%s] (%d comments) {NSFW}" % (title, subreddit_name, comments_count)
         if comments_count != 0:
-            time_comm_num = time_new_rise / float(comments_count))
+            time_comm_num = time_new_rise / float(comments_count)
             GPIO.output((gpio_new_rise, gpio_nsfw), (GPIO.HIGH, GPIO.HIGH if nsfw else GPIO.LOW))
             for i in xrange(comments_count):
                 gpio_blink(gpio_comm_num, bton=time_comm_num/2., btoff=time_comm_num/2.)
