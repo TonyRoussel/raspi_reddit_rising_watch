@@ -71,6 +71,7 @@ def reindent(s, numSpaces):
 
 def notify_comment(posts):
     for post in posts:
+        time.sleep(time_between_notif)
         subject = post.subject.encode('utf-8')
         author = post.author.name.encode('utf-8')
         body = post.body.encode('utf-8')
