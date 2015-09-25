@@ -3,7 +3,8 @@ import praw
 import sys
 import argparse
 
-watcher_choices = ["front", "new", "rising", "controversial"]
+watcher_choices = ["front", "new", "rising", "controversial", "inbox"]
+comments_watchers = ["inbox"]
 argparser = argparse.ArgumentParser()
 argparser.add_argument("-ng", "--nogpio", help="don't use gpio port to notify", action="store_true")
 argparser.add_argument("-w", "--watched", type=str, choices=watcher_choices, default="rising", help="choose watched section")
@@ -20,20 +21,21 @@ else:
 watch_choice = watcher_choices.index(args.watched)
 
 
-
 user_agent = "linux:Rising Watch:v0.0.1 (by /u/not_da_bot)"
 r = praw.Reddit(user_agent=user_agent, cache_timeout=1)
-post_retrievers = [r.get_front_page, r.get_new, r.get_rising, r.get_controversial]
-cooldown_times = [60, 2, 2, 10]
+post_retrievers = [r.get_front_page, r.get_new, r.get_rising, r.get_controversial, r.get_inbox]
+cooldown_times = [60, 2, 2, 10, 2]
 
 post_retriever = post_retrievers[watch_choice]
 cooldown_time = cooldown_times[watch_choice]
 rising_retrieve_limit = 10
+notifier = nt.notify_comment if args.watched in comments_watchers else nt.notify
+
 
 try:
     nt.init()
-    last_ids = []
     r.login()
+    last_ids = []
     while 1:
         nt.retrieve_on()
         ids_list = []
@@ -45,7 +47,7 @@ try:
             ids_list.append(post.id)
         last_ids = list(ids_list)
         if len(new_posts) != 0:
-            nt.notify(new_posts)
+            notifier(new_posts)
         nt.cooldown(cooldown_time=cooldown_time)
 except KeyboardInterrupt:
     print >> sys.stderr, "\nKeyboard Interruption\n"
