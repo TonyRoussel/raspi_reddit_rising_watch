@@ -37,15 +37,15 @@ try:
     while 1:
         nt.retrieve_on()
         ids_list = []
-        new_submissions = []
-        submissions = post_retriever(limit=rising_retrieve_limit)
-        for submission in submissions:
-            if submission.id not in last_ids:
-                new_submissions.append(submission)
-            ids_list.append(submission.id)
+        new_posts = []
+        posts = post_retriever(limit=rising_retrieve_limit)
+        for post in posts:
+            if post.id not in last_ids:
+                new_posts.append(post)
+            ids_list.append(post.id)
         last_ids = list(ids_list)
-        if len(new_submissions) != 0:
-            nt.notify(new_submissions)
+        if len(new_posts) != 0:
+            nt.notify(new_posts)
         nt.cooldown(cooldown_time=cooldown_time)
 except KeyboardInterrupt:
     print >> sys.stderr, "\nKeyboard Interruption\n"
