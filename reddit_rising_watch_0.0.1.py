@@ -3,9 +3,10 @@ import praw
 import sys
 import argparse
 
-
+watcher_choices = ["front", "new", "rising", "controversial"]
 argparser = argparse.ArgumentParser()
 argparser.add_argument("-ng", "--nogpio", help="don't use gpio port to notify", action="store_true")
+argparser.add_argument("-w", "--watched", type=str, choices=watcher_choices, default="rising", help="choose watched section")
 args = argparser.parse_args()
 
 if args.nogpio is True:
@@ -16,24 +17,29 @@ else:
     except ImportError:
         print >> sys.stderr, "Can't import gpio module, use term-only mode"
         import notification.termonly.notifier as nt
+watch_choice = watcher_choices.index(args.watched)
 
 
+
+user_agent = "linux:Rising Watch:v0.0.1 (by /u/not_da_bot)"
+r = praw.Reddit(user_agent=user_agent, cache_timeout=1)
+post_retrievers = [r.get_front_page, r.get_new, r.get_rising, r.get_controversial]
+cooldown_times = [60, 2, 2, 10]
+
+post_retriever = post_retrievers[watch_choice]
+cooldown_time = cooldown_times[watch_choice]
 rising_retrieve_limit = 10
-cooldown_time = 2
-
 
 try:
     nt.init()
-    user_agent = "linux:Rising Watch:v0.0.1 (by /u/not_da_bot)"
-    r = praw.Reddit(user_agent=user_agent, cache_timeout=1)
     last_ids = []
     r.login()
     while 1:
         nt.retrieve_on()
         ids_list = []
         new_submissions = []
-        rising = r.get_rising(limit=rising_retrieve_limit)
-        for submission in rising:
+        submissions = post_retriever(limit=rising_retrieve_limit)
+        for submission in submissions:
             if submission.id not in last_ids:
                 new_submissions.append(submission)
             ids_list.append(submission.id)
