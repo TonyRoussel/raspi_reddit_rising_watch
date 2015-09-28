@@ -3,6 +3,7 @@ import praw
 import sys
 import argparse
 import reddit_watch_lib as lib
+import interaction.gpio.notifier as ntin
 
 watcher_choices = ["front", "new", "rising", "controversial", "inbox"]
 comments_watchers = ["inbox"]
@@ -38,16 +39,23 @@ redundant = args.redundant
 
 try:
     nt.init()
+    ntin.init()
+    new_posts = []
+    ntin.init_notif_clean_callback(new_posts)
     r.login()
     last_ids = []
     while 1:
         nt.retrieve_on()
         ids_list = []
-        new_posts = []
+        if not redundant:
+            new_posts = []
         posts = post_retriever(limit=rising_retrieve_limit)
         for post in posts:
             if post.id not in last_ids:
-                new_posts.append(post)
+                if not redundant:
+                    new_posts.append(post)
+                else:
+                    lib.list_unique_merge(new_posts)
             ids_list.append(post.id)
         last_ids = list(ids_list)
         if len(new_posts) != 0:
