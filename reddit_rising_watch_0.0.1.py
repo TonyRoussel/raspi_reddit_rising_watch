@@ -55,7 +55,7 @@ try:
                 if not redundant:
                     new_posts.append(post)
                 else:
-                    lib.list_unique_merge(new_posts)
+                    lib.list_unique_merge(new_posts, [post])
             ids_list.append(post.id)
         last_ids = list(ids_list)
         if len(new_posts) != 0:

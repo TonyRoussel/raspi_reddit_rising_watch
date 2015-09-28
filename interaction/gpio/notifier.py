@@ -23,5 +23,5 @@ def reset_container(container):
 
 
 def init_notif_clean_callback(new_post_container):
-    callback = lambda channel, container = new_post_container: reset_container(new_post_container)
-    GPIO.add_event_callback(gpio_clean_notif, GPIO.FALLING, callback=callback, bouncetime=bouncetime_clean_notif)
+    callback = lambda channel, container=new_post_container: reset_container(new_post_container)
+    GPIO.add_event_detect(gpio_clean_notif, GPIO.FALLING, callback=callback, bouncetime=bouncetime_clean_notif)
