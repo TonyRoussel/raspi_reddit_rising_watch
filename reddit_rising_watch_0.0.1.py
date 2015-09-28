@@ -2,12 +2,14 @@
 import praw
 import sys
 import argparse
+import reddit_watch_lib as lib
 
 watcher_choices = ["front", "new", "rising", "controversial", "inbox"]
 comments_watchers = ["inbox"]
 argparser = argparse.ArgumentParser()
 argparser.add_argument("-ng", "--nogpio", help="don't use gpio port to notify", action="store_true")
 argparser.add_argument("-w", "--watched", type=str, choices=watcher_choices, default="rising", help="choose watched section")
+argparser.add_argument("-c", "--cooldown", type=lib.check_positive_float, default=None, help="choose cooldown between update checking")
 args = argparser.parse_args()
 
 if args.nogpio is True:
@@ -27,7 +29,7 @@ post_retrievers = [r.get_front_page, r.get_new, r.get_rising, r.get_controversia
 cooldown_times = [60, 2, 2, 10, 2]
 
 post_retriever = post_retrievers[watch_choice]
-cooldown_time = cooldown_times[watch_choice]
+cooldown_time = cooldown_times[watch_choice] if args.cooldown is None else args.cooldown
 rising_retrieve_limit = 10
 notifier = nt.notify_comment if args.watched in comments_watchers else nt.notify
 
